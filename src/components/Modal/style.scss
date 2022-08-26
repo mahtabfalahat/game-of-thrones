@@ -1,0 +1,67 @@
+
+.Modal {
+    width: 500px;
+    height: auto;
+    position: fixed;
+    z-index: 2000;
+    padding: 16px;
+    left: 30%;
+    top: 20%;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+    border-radius: 10px;
+    margin : auto ; 
+}
+ .closeIconStyle{
+     border : 2px solid white ; 
+     border-radius: 50%;
+     padding : 2px ; 
+ }
+ .trapezoid {
+    width: 200px;
+    height: 60px;
+    transform: perspective(100px) rotateX(35deg);
+    margin: auto;
+    background: #333333;
+    border-radius: 5px;
+    color : white ; 
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+  .popUpTitle{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22.6957px;
+    line-height: 39px;    
+    color: #FFFFFF;
+    transform: perspective(100px) rotateX(-10deg);
+  }
+ .mainBox{
+    width: 100%;
+    height: auto;
+    background: #FFFFFF;
+    border-radius: 35px;
+    color : 'red'  ; 
+    text-align: center;
+    margin: auto;
+ }
+ @media (max-width : 900px){
+    .Modal{
+        width: 60%;
+        left: 20%;
+        top: 15%;
+    }
+    .trapezoid{
+        display: none;
+    }
+}
+@media (max-width : 600px){
+    .Modal{
+        width: 95%;
+        left: 3%;
+        top: 15%;
+    }
+}

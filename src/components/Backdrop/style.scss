@@ -1,0 +1,14 @@
+.backdrop {
+    width:100vw;
+    height: 100vh;
+    position:  fixed;
+    z-index: 2000;
+    // background-color: red;
+    background: rgba(0, 0, 0, 0.3);
+    // webkit-backdrop-filter: blur(36px);
+    backdrop-filter: blur(36px);
+    opacity: 0.7;
+    margin : auto; 
+    left : 0 ; 
+    top : 0  ; 
+  }
