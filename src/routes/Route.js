@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route  } from "react-router-dom";
-import { home , details} from "./Path";
+import { houses , details} from "./Path";
 import Spinner from "./../components/Spinner/Spinner";
-const Home = lazy(() => import("../views/Home/Home"));
+const Houses = lazy(() => import("../views/Houses/Houses"));
 const Details = lazy(() => import("../views/Details/Details"));
 
 const MainRoutes = () => {
@@ -14,7 +14,7 @@ const MainRoutes = () => {
             <Route path={details} element={<Details />} />
           
             <Route  path="*" element={<main style={{ padding: "1rem" }}> {" "}   <p>There's nothing here!</p>{" "}</main> }/>
-            <Route path={home} element={<Home />}></Route>
+            <Route path={houses} element={<Houses />}></Route>
           </Routes>
         </Suspense>
       </BrowserRouter>
