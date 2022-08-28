@@ -24,7 +24,6 @@ const Houses = () => {
             setHouses(fetchHouses);
         })
     }
-
     useEffect(() => {
         getHousesHandle();
     } ,[]);
@@ -32,12 +31,10 @@ const Houses = () => {
         <div className='houses-container' >
             <p className='list-text-style'>List of houses</p>
             <div className='houses-list-container' >
-                {isPending && <Spinner/>}
-                {houses.length > 0 && <HouseList houses = {houses}  />}
+                {isPending ? <Spinner/> : <HouseList houses = {houses}  />}
             </div>
         </div>
     )
 }
-
 
 export default Houses; 

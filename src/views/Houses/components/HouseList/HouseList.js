@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,15 +8,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
 import CustomTooltip from './../../../../components/CustomTooltip/CustomTooltip';
-import { getHouseDetail } from './../../../../api/endpoints';
+import { details } from './../../../../routes/Path';
 
 const HouseList = (props) => {
-
+    let navigate = useNavigate();
     const getHouseDetailHandle = async (url) => {
-        let result = await getHouseDetail({ url });
-        console.log(result);
+        navigate(details, { state: { houseDetailUrl: url } });
     }
     return (
         <TableContainer component={Paper} sx={{ width: '99%', height: '99%', margin: 'auto', overflow: 'scroll' }}>
@@ -32,29 +32,35 @@ const HouseList = (props) => {
                 </TableHead>
                 <TableBody>
                     {props.houses.map((row) => (
-
                         <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                             <TableCell component="th" scope="row" align="left"  >{row.name} </TableCell>
                             <TableCell align="left">{row.region ? row.region : "-"}</TableCell>
-                            <TableCell align="left">{row.titles !== [] ? row.titles : "-"}</TableCell>
+                            <TableCell align="left">
+                                <ul>
+                                    {(row.titles.length > 0 && row.titles[0] !== "") && row.titles.map((value, index) => {
+                                        return (
+                                            <li key = {index}>{value}</li>
+                                        )
+                                    })}
+                                </ul>
+                                {/* {row.titles !== [] ? row.titles : "-"} */}
+                                </TableCell>
                             <TableCell align="left">{row.founded ? row.founded : '-'}</TableCell>
                             <TableCell align="left">{row.coatOfArms ? row.coatOfArms : "-"}</TableCell>
                             <TableCell align="left">
-                                <CustomTooltip tooltipTitle="حذف" >
-                                    {/* <IconButton onClick={() => getHouseDetailHandle(row.url)} size="large" aria-label="show 4 new mails" color="inherit">
-                                        <DeleteIcon sx={{ color: 'red' }} />
-                                    </IconButton> */}
+                                <CustomTooltip tooltipText="detail" >
+                                    <IconButton onClick={() => getHouseDetailHandle(row.url)} size="large" aria-label="show 4 new mails" color="inherit">
+                                        <SearchIcon sx={{ color: 'red' }} />
+                                    </IconButton>
                                 </CustomTooltip>
                             </TableCell>
                         </TableRow>
-                    ))} 
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer>
     )
 }
-
-
 export default HouseList;
 
 
