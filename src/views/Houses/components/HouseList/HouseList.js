@@ -43,7 +43,6 @@ const HouseList = (props) => {
                                         )
                                     })}
                                 </ul>
-                                {/* {row.titles !== [] ? row.titles : "-"} */}
                                 </TableCell>
                             <TableCell align="left">{row.founded ? row.founded : '-'}</TableCell>
                             <TableCell align="left">{row.coatOfArms ? row.coatOfArms : "-"}</TableCell>

@@ -1,37 +1,36 @@
 import { useEffect, useState, useTransition } from 'react';
-import { getHouses } from './../../api/endpoints';
+import { getHouseInfo } from './../../api/endpoints';
+import CustomLoadingMask from './../../components/CustomLoading/CustomLoadingMask';
 import HouseList from './components/HouseList/HouseList';
-import Spinner from './../../components/Spinner/Spinner' ; 
 import './style.scss';
 
 const Houses = () => {
     const [houses, setHouses] = useState([]);
-
-    const [isPending, startTransition] = useTransition();
+    const [loading, setLoading] = useState(false);
 
     const getHousesHandle = async () => {
-        startTransition(async() => {
-            let result = await getHouses();
-            console.log(result);
-            let fetchHouses = [];
-            for (let key in result.data) {
-                fetchHouses.push({
-                    ...result.data[key],
-                    id: key
+        let url = 'https://www.anapioficeandfire.com/api/houses';
+        setLoading(true) ; 
+        let result = await getHouseInfo({ url: url });
+        let fetchHouses = [];
+        for (let key in result.data) {
+            fetchHouses.push({
+                ...result.data[key],
+                id: key
 
-                })
-            }
-            setHouses(fetchHouses);
-        })
+            })
+        }
+        setHouses(fetchHouses);
+        setLoading(false) ; 
     }
     useEffect(() => {
         getHousesHandle();
-    } ,[]);
+    }, []);
     return (
         <div className='houses-container' >
             <p className='list-text-style'>List of houses</p>
             <div className='houses-list-container' >
-                {isPending ? <Spinner/> : <HouseList houses = {houses}  />}
+                {loading ? (<CustomLoadingMask type="spinningBubbles" color="#F10917" />) : <HouseList houses={houses} />}
             </div>
         </div>
     )

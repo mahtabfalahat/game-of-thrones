@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getHouseDetail } from './../../api/endpoints';
-import Spinner from './../../components/Spinner/Spinner';
+import { getHouseInfo } from './../../api/endpoints';
 import axios from 'axios';
-import GOTMap from './../../assets/Images/GOT-Map.jpg';
+import CustomLoadingMask from './../../components/CustomLoading/CustomLoadingMask'; 
 import TextContainer from './../../components/TextContainer/TextContainer';
 import CustomAccordion from './../../components/CustomAccordion/CustomAccordion';
 import './style.scss';
@@ -12,84 +11,57 @@ const Details = () => {
     const [houseDetail, sethouseDetail] = useState();
     const [overlord, setOverlord] = useState("");
     const [founder, setFounder] = useState("");
+    const [heir, setHeir] = useState("");
+    const [currentLord, setCurrentLord] = useState("") ; 
     const [titles, setTitles] = useState([]);
     const [seats, setSeats] = useState([]);
     const [members, setmembers] = useState([]);
     const [loading, setLoading] = useState(false);
-    const location = useLocation();
 
+    const location = useLocation();
 
     const getHouseDetailHandle = useCallback(async () => {
         setLoading(true);
-        var result = await getHouseDetail({ url: location.state.houseDetailUrl });
+
+        var result = await getHouseInfo({ url: location.state.houseDetailUrl });
         sethouseDetail(result.data);
         setTitles(result.data.titles);
         setSeats(result.data.seats);
-        setFounder(result.data.founder);
-        setOverlord(result.data.overlord);
 
         if (result.data.swornMembers[0] !== "" || result.data.swornMembers.length > 0) {
             getMembersHandler(result.data.swornMembers);
         }
-
-        let endpoints = [];
-        let keys = [];
         if (result.data.founder !== "") {
-            endpoints.push(result.data.founder)
-            keys.push("founder");
+            getFounderHandle(result.data.founder);
         }
         if (result.data.overlord !== "") {
-            endpoints.push(result.data.overlord)
-            keys.push("overlord");
+            getOverlordHandle(result.data.overlord);
         }
         if (result.data.heir !== "") {
-            endpoints.push(result.data.heir);
-            keys.push("heir");
+            getHeirHandle(result.data.heir);
         }
         if (result.data.currentLord !== "") {
-            endpoints.push(result.data.currentLord);
-            keys.push("currentLord");
+            getCurrentLordHandle(result.data.currentLord) ; 
         }
-
-        console.log("endpoints", endpoints)
-        console.log("keys", keys)
-
-        function getAllData(endpoints) {
-            return Promise.all(endpoints.map(fetchData));
-        }
-        function fetchData(URL) {
-            return axios
-                .get(URL)
-                .then(function (response) {
-                    return {
-                        success: true,
-                        data: response.data
-                    };
-                })
-                .catch(function (error) {
-                    return { success: false };
-                });
-        }
-        getAllData(endpoints).then(resp => {
-            let newObj = {};
-            for (let key in resp) {
-                console.log(keys[key])
-                console.log(resp[key])
-                newObj[keys[key]] = resp[key] ;
-            }
-            console.log('newObj ', newObj)
-
-        }).catch(e => { console.log(e) })
-
-
-
-
-
 
         setLoading(false);
     }, [location.state.houseDetailUrl])
-
-
+    const getFounderHandle = async (url) => {
+        var result = await getHouseInfo({ url: url });
+        setFounder(result.data.name)
+    }
+    const getOverlordHandle = async (url) => {
+        var result = await getHouseInfo({ url: url });
+        setOverlord(result.data.name)
+    }
+    const getHeirHandle = async (url) => {
+        var result = await getHouseInfo({ url: url });
+        setHeir(result.data.name)
+    }
+    const getCurrentLordHandle = async (url) => {
+        var result = await getHouseInfo({ url: url });
+        setCurrentLord(result.data.name)
+    }
     const getMembersHandler = (endpoints) => {
         setLoading(true);
         function getAllData(endpoints) {
@@ -126,15 +98,19 @@ const Details = () => {
         <>
             <div className='detail-container'>
                 <p className='header-text-style'>Details of :  {houseDetail?.name} </p>
-                {loading && <Spinner />}
+                {loading && (<CustomLoadingMask type="spinningBubbles" color="#F10917" />)}
                 <div className='detail-card-container' >
                     <div className='list-of-details'>
 
                         <TextContainer title="coat Of Arms" response={houseDetail?.coatOfArms} />
                         <TextContainer title="diedOut" response={houseDetail?.diedOut} />
+                        <TextContainer title="founder" response={founder} />
                         <TextContainer title="founded" response={houseDetail?.founded} />
+                        <TextContainer title="overlord" response={overlord} />
+                        <TextContainer title="currentLord" response={currentLord} />
                         <TextContainer title="words" response={houseDetail?.words} />
                         <TextContainer title="region" response={houseDetail?.region} />
+                        <TextContainer title="heir" response={heir} />
 
                         <CustomAccordion title="titles : " disabled={titles.length === 0 || titles[0] === ""} >
                             <ul>
@@ -154,22 +130,6 @@ const Details = () => {
                                     )
                                 })}
                             </ul>
-                        </CustomAccordion>
-
-                        <CustomAccordion title="founder:"  >
-                            <p>send api</p>
-                        </CustomAccordion>
-
-                        <CustomAccordion title="heir:"  >
-                            <p>send api</p>
-                        </CustomAccordion>
-
-                        <CustomAccordion title="currentLord:"  >
-                            <p>send api</p>
-                        </CustomAccordion>
-
-                        <CustomAccordion title="overlord:"  >
-                            <p>send api</p>
                         </CustomAccordion>
 
                         <CustomAccordion title="swornMembers:" disabled={members.length === 0} >
